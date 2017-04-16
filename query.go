@@ -1,11 +1,13 @@
 package puppetdb
 
 import (
-	"strings"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 /*
@@ -17,7 +19,7 @@ func (server *Server) Query(url string) ([]byte, error) {
 	fullUrl := strings.Join([]string{baseUrl, url}, "")
 
 	req, err := http.NewRequest("GET", fullUrl, nil)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -25,7 +27,12 @@ func (server *Server) Query(url string) ([]byte, error) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	if(err != nil) {
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		err = errors.New("Response code: " + strconv.Itoa(resp.StatusCode))
 		return nil, err
 	}
 
@@ -39,7 +46,7 @@ More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/versi
 */
 func (server *Server) QueryVersion() (*Version, error) {
 	body, err := server.Query("v3/version")
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -56,7 +63,7 @@ More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/serve
 */
 func (server *Server) QueryServerTime() (*ServerTime, error) {
 	body, err := server.Query("v3/server-time")
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -73,7 +80,7 @@ More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/fact-
 */
 func (server *Server) QueryFactNames() ([]string, error) {
 	body, err := server.Query("v3/fact-names")
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -91,7 +98,7 @@ More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/catal
 func (server *Server) QueryCatalogs(certname string) (*CatalogWireFormat, error) {
 	url := fmt.Sprintf("v3/catalogs/%v", certname)
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -110,7 +117,7 @@ func (server *Server) QueryFacts(queryString string) (*[]Fact, error) {
 	url := fmt.Sprintf("v3/facts?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -129,7 +136,7 @@ func (server *Server) QueryFactsByName(name string, queryString string) (*[]Fact
 	url := fmt.Sprintf("v3/facts/%v?%v", name, queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -148,7 +155,7 @@ func (server *Server) QueryFactsByNameValue(name string, value string, queryStri
 	url := fmt.Sprintf("v3/facts/%v/%v?%v", name, value, queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -167,7 +174,7 @@ func (server *Server) QueryResources(queryString string) (*[]CatalogResource, er
 	url := fmt.Sprintf("v3/resources?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -186,7 +193,7 @@ func (server *Server) QueryNodes(queryString string) (*[]Node, error) {
 	url := fmt.Sprintf("v3/nodes?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -205,7 +212,7 @@ func (server *Server) QueryReports(queryString string) (*[]Report, error) {
 	url := fmt.Sprintf("v3/reports?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -224,7 +231,7 @@ func (server *Server) QueryEvents(queryString string) (*[]Event, error) {
 	url := fmt.Sprintf("v3/events?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -243,7 +250,7 @@ func (server *Server) QueryEventCounts(queryString string) (*EventCounts, error)
 	url := fmt.Sprintf("v3/event-counts?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
@@ -262,7 +269,7 @@ func (server *Server) QueryAggregateEventCounts(queryString string) (*AggregateE
 	url := fmt.Sprintf("v3/aggregate-event-counts?%v", queryString)
 
 	body, err := server.Query(url)
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
