@@ -11,7 +11,7 @@ import (
 )
 
 /*
-Generic query function.
+Query is generic query function.
 */
 func (server *Server) Query(url string) ([]byte, error) {
 	baseUrl := server.BaseUrl
@@ -25,7 +25,7 @@ func (server *Server) Query(url string) ([]byte, error) {
 
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
+	client := &http.Client{Transport: server.HTTPTransport}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

@@ -1,5 +1,7 @@
 package puppetdb
 
+import "net/http"
+
 /*
 Representation of a PuppetDB server instance.
 
@@ -7,6 +9,7 @@ Use NewServer to create a new instance.
 */
 type Server struct {
 	BaseUrl string
+	HTTPTransport http.RoundTripper
 }
 
 /*
@@ -17,5 +20,16 @@ this initial object and use it to perform activities on the instance in
 question.
 */
 func NewServer(baseUrl string) Server {
-	return Server{baseUrl}
+	return newServer(baseUrl, nil)
+}
+
+func NewServerWithTransport(baseUrl string, httpTransport http.RoundTripper) Server {
+		return newServer(baseUrl, httpTransport)
+	}
+
+func newServer(baseUrl string, httpTransport http.RoundTripper) Server {
+	return Server{
+			BaseUrl:       baseUrl,
+			HTTPTransport: httpTransport,
+	}
 }
