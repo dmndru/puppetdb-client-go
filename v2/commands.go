@@ -84,7 +84,8 @@ name as an argument to indicate which node to deactivate.
 More details here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html#deactivate-node-version-1
 */
 func (server *Server) DeactivateNode(certname string) (*CommandResponse, error) {
-	certnameJson, err := json.Marshal(certname)
+	certPayload := CertPayloadObject{certname}
+	certnameJson, err := json.Marshal(certPayload)
 	if err != nil {
 		return nil, err
 	}
