@@ -19,7 +19,7 @@ More detail here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html
 */
 func (server *Server) SubmitCommand(command string, version int, payload interface{}) (*CommandResponse, error) {
 	baseUrl := server.BaseUrl
-	commandsUrl := strings.Join([]string{baseUrl, "v3/commands"}, "")
+	commandsUrl := strings.Join([]string{baseUrl, "pdb/cmd/v1"}, "")
 
 	commandObject := CommandObject{command, version, payload}
 	commandJson, err := json.Marshal(commandObject)
@@ -34,7 +34,7 @@ func (server *Server) SubmitCommand(command string, version int, payload interfa
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
+	req.Header.Set("Content-Type", "Content-Type:application/json")
 
 	client := &http.Client{Transport: server.HTTPTransport}
 	resp, err := client.Do(req)
@@ -89,7 +89,7 @@ func (server *Server) DeactivateNode(certname string) (*CommandResponse, error) 
 		return nil, err
 	}
 
-	commandResponse, err := server.SubmitCommand("deactivate node", 1, string(certnameJson[:]))
+	commandResponse, err := server.SubmitCommand("deactivate node", 3, string(certnameJson[:]))
 	return commandResponse, err
 }
 
