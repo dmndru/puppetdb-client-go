@@ -34,7 +34,7 @@ func (server *Server) SubmitCommand(command string, version int, payload interfa
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "Content-Type:application/json")
+	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{Transport: server.HTTPTransport}
 	resp, err := client.Do(req)
