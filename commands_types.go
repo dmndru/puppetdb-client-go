@@ -14,10 +14,6 @@ type CommandObject struct {
 	Payload	interface{} `json:"payload"`
 }
 
-type CertPayloadObject struct {
-	Certname string `json:"certname"`
-}
-
 /*
 Response to a commands submission request.
 
