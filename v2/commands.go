@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 )
 
@@ -27,14 +26,12 @@ func (server *Server) SubmitCommand(command string, version int, payload interfa
 		return nil, err
 	}
 
-	data := url.Values{}
-	data.Set("payload", string(commandJson[:]))
-
-	req, err := http.NewRequest("POST", commandsUrl, bytes.NewBufferString(data.Encode()))
+	req, err := http.NewRequest("POST", commandsUrl, bytes.NewBufferString(string(commandJson[:])))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 
 	client := &http.Client{Transport: server.HTTPTransport}
 	resp, err := client.Do(req)
