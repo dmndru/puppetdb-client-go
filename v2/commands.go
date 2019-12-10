@@ -82,12 +82,12 @@ More details here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html#
 */
 func (server *Server) DeactivateNode(certname string) (*CommandResponse, error) {
 	certPayload := CertPayloadObject{certname}
-	certnameJson, err := json.Marshal(certPayload)
-	if err != nil {
-		return nil, err
-	}
+	//certnameJson, err := json.Marshal(certPayload)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	commandResponse, err := server.SubmitCommand("deactivate node", 3, string(certnameJson[:]))
+	commandResponse, err := server.SubmitCommand("deactivate node", 3, certPayload)
 	return commandResponse, err
 }
 
